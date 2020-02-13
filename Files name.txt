@@ -2,7 +2,7 @@ js  (libs/libs.min.js, main.js, general.js)
 
 css (libs.min.css, main.min.css)
 
-img (/sprites)
+img (/sprites/[originalFiles ,readyFiles])
 
 sprites (/originalFiles, /readyFiles)
 
