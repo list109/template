@@ -1,0 +1,45 @@
+@import '_sprite-mixin.scss';
+
+/* 
+Exapmle:
+
+.sprite {
+  width: 50px;
+  display: inline-block;
+  position: relative;
+  vertical-align: middle;
+  &::before {
+    content: "";
+    display: block;
+    position: absolute;
+  }
+}
+
+.sprite-kuban {
+  &::before {
+    @include sprite($s-kubanenergo);
+   transform: translateY(-55%);
+  }
+}
+
+.sprite-plant {
+  &::before {
+    @include sprite($s-kotelnaya);
+   transform: scale(1.2) translateY(-45%);
+  }
+}
+
+.sprite-rosenergo {
+ &::before {
+   @include sprite($s-rosenergo);
+   transform: scale(.7) translateY(-70%);
+ }
+}
+
+.sprite-upButton {
+ &::before {
+   @include sprite($s-up-button);
+   transform: scale(.7) translateY(-70%);
+ }
+} 
+*/

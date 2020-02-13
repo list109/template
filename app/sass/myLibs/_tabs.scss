@@ -1,0 +1,474 @@
+
+
+
+
+//carousel
+
+.moveItem {
+	transition: transform .3s ease-out;
+	transition-duration: .3s;
+}
+
+
+
+// zoomer
+
+.zoomerHidden { // фото до увеличения
+	width: 0;
+	height: 0; 
+	box-sizing: border-box;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	z-index: 110;
+	position: fixed;
+	background: {
+		color: #fff;
+		position: 0% 0%;
+		repeat: no-repeat;
+		size: cover;
+	}
+	&-leftButton,
+	&-rightButton,
+	&-closeButton {
+		position: absolute;
+		cursor: pointer;
+		transform: scale(0);
+	}
+	&-leftButton::before,
+	&-rightButton::before {
+		content: "";
+		display: block;
+		position: absolute;
+		box-sizing: border-box;
+		left: 0;
+		top: 0;
+		border-color: transparent;
+		transform: scale(0);
+	}
+	&-leftButton {
+		left: 0;
+		top: 50%;
+	}
+	&-rightButton {
+		right: 0;
+		top: 50%;
+	}
+	&-description {
+		position: absolute;
+		left: 50%;
+		transform: translateX(-50%);
+		text-align: center;
+		text-shadow: 0 0 .5em;
+		box-sizing: border-box;
+		border-bottom-color: transparent;
+		bottom: 0;
+		opacity: 0;
+		height: 0;
+	}
+}
+
+.zoomerShowing { // увеличение фото
+	$closeButtonSize: 3em;
+	
+	$closeButtonColor: hsl(201, 5%, 70%);
+	$closeButtonColorHover: scale-color($closeButtonColor, $lightness: 35%);
+	$closeButtonColorActive: scale-color($closeButtonColor, $lightness: 70%);
+	
+	$pointedButtonColor: hsla(201, 32%, 16%, .7);
+	$pointedButtonColorHover: scale-color($pointedButtonColor, $alpha: -30%);
+	$pointedButtonColorActive: scale-color($pointedButtonColor, $alpha: -60%);
+	
+	$borderWidth: .625em;
+	$borderRadius: .625em;
+	$leftRightButtonSize: 2.5em;
+	$pointerWidth: .5em;
+	
+	$widthDuration: .5s; //изменение скорости анимации ширины
+	$widthDalay: .2s; //задержка скорости анимации ширины
+	$heightDuration: .5s; //изменение скорости анимации высоты 
+	$heightDalay: $widthDuration + $widthDalay; //задержка скорости анимации высоты
+	
+	$closeButtonDalay: $heightDalay + $heightDuration;
+	
+	border: $borderWidth solid #fff;
+	border-radius: $borderRadius;
+	height: calc(100vmax / 1.9) ;
+	width: 80vmax;
+	transition: width $widthDuration ease-out $widthDalay,
+	height $heightDuration linear $heightDalay;
+	
+	@media (min-width: 1200px) {
+		height: 85vw * .55;
+		width: 75vw;
+	}
+	@media(min-width: 1600px) {
+		height: 85vw * .5;
+		width: 70vw;
+	}
+	@media (max-width: 991.98px) and (orientation: portrait) {
+		transform: rotate(-90deg) translate(-50%, -50%);
+		left: 50%;
+		top: 50%;
+		transform-origin: 0% 0%;
+	}
+	@media (max-width: 575.98px) and (orientation: portrait),
+	(max-width: 575.98px) and (orientation: landscape) {
+		height: 90vmin;
+		width: 75vmax;
+	}
+	&-leftButton,
+	&-rightButton {
+		-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+		border: {
+			width: $leftRightButtonSize;
+			style: solid;
+			color: #fff;
+			radius: 50%;
+			right-color: transparent;
+			bottom-color: transparent;
+		}
+		&::before {			
+			width: $leftRightButtonSize/1.5;
+			height: $leftRightButtonSize/1.5;
+			top: -$leftRightButtonSize/2;
+			left: -$leftRightButtonSize/2;
+			border: $pointerWidth solid transparent;
+			border-top-color: $pointedButtonColor;
+			border-left-color: $pointedButtonColor; 
+			transform: scale(1);
+			transition: top .3s ease-out $closeButtonDalay,
+			left .3s ease-out $closeButtonDalay,
+			transform .3s ease-out $closeButtonDalay;
+		}
+		&:hover::before {
+			border-top-color: $pointedButtonColorHover;
+			border-left-color: $pointedButtonColorHover; 
+		}
+		&:active::before {
+			border-top-color: $pointedButtonColorActive;
+			border-left-color: $pointedButtonColorActive; 
+		}
+	}
+	&-leftButton {		
+		transform: translate((-$leftRightButtonSize), -50%) rotate(-45deg) scale(1);		
+	}
+	&-rightButton {
+		transform: translate(($leftRightButtonSize), -50%) rotate(135deg) scale(1);
+	}
+	&-closeButton {
+		width: $closeButtonSize;
+		height: $closeButtonSize;
+		top: -$closeButtonSize - $borderWidth;
+		right: -$closeButtonSize - $borderWidth;
+		transition: cursor .1s ease-out,
+		transform .3s ease-out $closeButtonDalay;
+		transform: scale(1);
+		-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+		@media (max-width: 575.98px) and (orientation: portrait),
+		(max-width: 991.98px) and (orientation: landscape) {
+			top: -$borderWidth*2;
+			right: -$closeButtonSize - $borderWidth*2;
+		}
+		&::after,
+		&::before {
+			width: 100%;
+			height: $pointerWidth;
+			content: "";
+			display: block;
+			position: absolute;		
+			top: 50%;
+			transform: translateY(-50%);
+			background-color: $closeButtonColor;
+			border-radius: 10px;
+		}
+		&::before {
+			transform: rotate(45deg);
+		}
+		&::after {
+			transform: rotate(-45deg);
+		}
+		&:hover::before,
+		&:hover::after {
+			background-color: $closeButtonColorHover;
+		}
+		&:active::before,
+		&:active::after {
+			background-color: $closeButtonColorActive;
+		}
+	}
+	&-description {
+		width: 100%;
+		height: auto;
+		bottom: -200%;
+		left: 50%;
+		transform: translate(-50%, 200%);
+		transition: transform .3s ease-out $closeButtonDalay,
+		opacity .4s ease-out $closeButtonDalay;
+		opacity: 1;
+		bottom: 0;
+		@media (max-width: 575.98px) and (orientation: portrait),
+		(max-width: 991.98px) and (orientation: landscape) {
+			bottom: 0;
+			left: 50%;
+			transform: translate(-50%, -50%);
+		}
+	}
+}
+
+.zoomerOverlay { // затемнение заднего фона
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: hsla(200, 20%, 20%, .7);
+	z-index: 100;
+	transition: background-color .5s ease-out;
+}
+
+
+//=================== changeClassByHover ======================
+
+// visible
+.visibleTitle {
+	text-shadow: .001px .001px .4em, 
+	-.001px -.001px .4em, 
+	-.001px .001px .4em, 
+	.001px -.001px .4em;
+}
+
+.visibleFon {
+	opacity: 1 !important;
+}
+
+// advantage
+.wisible-text-item {
+	text-shadow: 0 0 .5em;
+	@media (min-width: 992px) {
+		text-indent: .65em;
+	}
+	@media (max-width: 991.98px) {
+		transform: scale(1.15);
+	}
+	@media (max-width: 991.98px) and (min-width: 400px) {
+		&:nth-of-type(2n + 1) {
+			transform-origin: 0% 50%;
+		}
+		&:nth-of-type(2n) {
+			transform-origin: 100% 50%;		
+		}
+	}
+	&::before {
+		width: 100% !important;
+	}
+}
+
+
+.enabled {
+	position: relative !important;
+	transform: rotate(0deg) !important;
+	text-shadow: 0 0 .5em;
+	left: 0 !important;
+	bottom: 0 !important;
+	visibility: visible !important;
+}
+
+
+
+//===================== changeClassByScroll ====================
+
+.our-services-scroll {
+	$round-border-succes-color: scale-color($succes-color, $lightness: 15%);
+	
+	@media(max-width: 767.98px) {
+		margin: 0 .5em;
+		.our-services-link {
+			transform: scale(1.3);
+			box-shadow: 0 0 1em 0em rgba(0, 0, 0, 0.5);
+			&::before {
+				border-color: $round-border-succes-color !important;
+			}
+			&::after {
+				display: none;
+			}
+		}
+		.alt-title {
+			color: hsl(0, 0, 100%);
+			background-color: hsl(0, 0, 40%) !important;
+			transform: scale(1.2);
+		}
+	}
+}
+
+//============================================================
+
+// stickyElem
+
+.stickyElem {
+	position: fixed !important;
+	top: 0;
+	left: 0;
+	z-index: 10;
+	width: 100% !important;
+	&::before {
+		z-index: -1;
+		transition: height .5s ease-out, 
+		background-color .5s ease-out;
+		background-color: scale-color($alt-row-color, $lightness: -80%, $alpha: -15%) !important;
+	}
+	@media (max-width: 991.98px) and (min-width: 767.98px) and (max-height: 500px) {
+		display: none !important;
+	}
+	@media (max-width: 767.98px) and (orientation: landscape) {
+		display: none !important;
+	}
+	ul {
+		z-index: -1 !important;
+	}
+	.primary-nav-mobile {
+		display: block !important;
+	}
+}
+
+
+//======================================================mobileMenu======================================================
+
+// иконка мобильного меню
+.menu-icon-enable {
+	position: relative !important;
+	z-index: 0 !important;
+	transform: rotate(0deg) !important;
+}
+
+.menu-icon-rotate {
+	transform: rotate(180deg) !important;
+}
+
+// пункт "Меню"
+.menu-item-disable {
+	z-index: -10 !important;
+	visibility: hidden !important;
+	position: absolute !important;
+	display: block !important;
+}
+
+// растягивание элемента ul
+.mobileMenu {
+	@media(max-width: 992px) {
+		&::before {
+			height: 100vh !important;
+		}
+	}
+}
+
+// элемент клонированных пунктов меню при растягивании ul
+.menuClone {
+	position: fixed;
+	display: none;
+	@media(max-width: 991.98px) {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		left: 50%;
+		top: -50%;
+		transform: translate(-50%, -45%);
+		text-transform: uppercase;
+		font-family: "Oswald", "Trebuchet MS", "Helvetica CY", "Nimbus Sans L", sans-serif;
+		font-size: 1.2em;
+		z-index: 11;
+		transition: top .5s ease-out;
+		text-shadow: 0 0 .5em;
+		visibility: hidden;
+		width: 100%;
+		li + li {
+			margin-top: 3%;
+		}
+		li a {
+			padding: .7em 0;
+			display: block;
+		}
+	}
+	@media (max-width: 991.98px) and (max-height: 500px) {
+		display: none;
+	}
+	@media(max-width: 767.98px) and (orientation: landscape) {
+		display: none;
+	}
+}
+
+.menuCloneMove {
+	top: 50%;
+}
+
+.visible {
+	visibility: visible !important;
+}
+.hidden {
+	visibility: hidden !important;
+}
+
+.primary-nav-icon-visible {
+	@media (max-width: 991.98px) {
+		z-index: 11 !important;
+		visibility: visible !important;
+	}
+	div {
+		transform: rotate(0deg) !important;
+	}
+}
+
+.primary-nav-icon-rotate {
+	div {
+		transform: rotate(180deg) !important;
+	}
+}
+
+//============================================================================================
+
+
+
+// movingBox
+
+.movingBoxToRight {
+	transform: translateX(0%) !important;
+}
+
+
+// returning button
+
+.upButton-visible {
+	visibility: visible !important;
+	display: block !important;
+	position: fixed !important;
+	transform: scale(1) !important;
+	transition: transform .3s cubic-bezier(.7,1.95,.84,1.3);
+}
+
+
+
+//==============================Setting a footer's position==================================
+
+.footer-position {
+	transform: translateY(90%);
+}
+
+.alt-footer-position {
+	transform: translateY(100%);
+}
+
+
+//===========================Classes of the object page==================================
+
+.active-general-section-media {
+	.general-section-media-title {
+		color: $alt-font-color;
+	}
+	i {
+		transform: rotate(90deg);
+	}
+	.general-media-block {
+		max-height: 10000px;
+		transition: max-height 1.5s ease-in !important;
+	}
+}

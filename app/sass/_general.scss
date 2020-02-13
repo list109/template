@@ -1,0 +1,257 @@
+// импорт библиотек
+@import 'myLibs/_fonts.scss';
+@import 'normalize';
+@import 'myLibs/_color-theme.scss';
+@import 'myLibs/_animation.scss';
+@import 'myLibs/_buttons.scss';
+@import 'myLibs/_mixin.scss';
+@import 'myLibs/_templates.scss';
+@import 'myLibs/_tabs.scss';
+@import 'myLibs/_media.scss';
+@import 'myLibs/_sprite.scss';
+
+//  Стили myLib:
+//  1. _animation.scss
+//	2. _buttons.scss
+//	3. _color-theme.scss
+//	4. _fonts.scss
+//	5. _media.scss
+//	6. _mixin.scss
+//	7. _sprite.scss
+//	8. _sprite-mixin.scss
+//  9. _tabs.scss
+// 10. _templates.scss
+
+// ==================ОБЩИЕ СТИЛИ ДЛЯ ВСЕХ СТРАНИЦ=====================
+//	Оглавление:
+
+//  Стили внутри:
+//	1. Пользовательские стили
+//	2. Типографика
+//	3. Сетка
+//	4. Полосы	
+//	5. Clearfix
+//	6. Кнопки
+//	7. Навигация
+//	8. Основной заголовок
+
+// Переменные для общего использования:
+
+
+// 1. ПОЛЬЗОВАТЕЛЬСКИЕ СТИЛИ ===============================
+
+//1.1 body, :root; ====================
+
+head, body {
+	overflow-x: hidden;
+}
+
+:root { // элемент HTML
+	font-size: 1em;
+	@include media-breakpoint-down(lg) {
+		font-size: .95rem;
+	}
+	@include media-breakpoint-down(xs) {
+		font-size: .9rem;
+	}
+	@include media-breakpoint-down(xxs) {
+		font-size: .85em;
+	}
+};
+
+body {
+	font: 400 1rem/1.5 $contentFont;
+	color: $font-color;
+}
+
+//1.2 Ссылки ====================
+a {
+	text-decoration: none;
+	color: $font-color;
+	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+/* a[href^="tel:"] {
+	display: block;
+	padding-bottom: .5em;
+} */
+
+figure {
+	margin: 0;
+}
+
+button {
+	&:active, 
+	&:focus {
+		outline: none;
+	}
+}
+
+//1.3 Остальное ====================
+
+ul {
+	list-style-type: none;
+	padding-left: 0;
+	margin: 0;
+}
+li {
+	margin: 0;
+}
+
+//1.4 Заголовки ====================
+
+/* h1, h2, h3, h4, h5 {
+	font: { // свойство font сбивает line-height до установок браузера, поэтому font пишеться развернуто;
+		family: $titleFont;
+		weight: 300;
+	}
+	text-transform: uppercase;
+} */
+
+h1 {
+	font-size: 2.125rem; // 36px
+}
+
+h2 {
+	font-size: 1.5rem; // 24px
+	font-weight: 400;
+}
+
+h3 {
+	font-size: 1.3125rem; // 21px
+}
+
+h4 {
+	font-size: 1.125rem; //18px
+}
+
+h5 {
+	font: {
+		size: 0.875rem; //14px
+		weight: 500;
+	}
+	letter-spacing: .1em;
+	word-spacing: .4em;
+}
+
+// 2. ТИПОГРАФИКА ===============================
+
+h1, h2, h3, h4, h5, p {
+	margin: {
+		bottom: 0;
+		top: 0;
+	};
+}
+h1 {
+	margin-bottom: 2em;
+}
+
+h2 {
+	margin-bottom: 3em;
+}
+
+h3 {
+	margin-bottom: 2em;
+}
+
+h4 {
+	margin-bottom: 1.5em;
+}
+
+p {
+	margin-bottom: 1em;
+}
+
+small {
+	font-size: .9em;
+}
+
+// 3. СЕТКА ===============================
+
+
+/* $container-padding: 0.937rem; // 15px
+
+.container {
+	box-sizing: border-box;
+	width: 100%;
+	max-width: 1200px;
+	margin: 0px auto;
+	@media(max-width: 1260px) {
+		max-width: 1100px;
+	}
+	@include  media-breakpoint-down($max-width: lg) {
+		max-width: 940px
+	}
+	@include  media-breakpoint-down($max-width: md) { //-61px
+		max-width: 707px
+	}
+	@include  media-breakpoint-down($max-width: sm) {
+		max-width: 515px
+	}
+}
+
+.container {
+	padding: 0 $container-padding;
+} */
+
+
+%col-1-4 {
+	width: 25%;
+}
+
+%col-3-4 {
+	width: 75%;
+}
+
+%col-1-3 {
+	width: 33%;
+}
+
+%col-2-3 {
+	width: 66%;
+}
+
+%col-1-2 {
+	width: 50%;
+}
+
+// 4. ПОЛОСЫ ===============================
+/* $margin-box: 5em;
+
+.row {
+	background-color: $row-color;
+}
+
+.alt-row {
+	background-color: $alt-row-color;
+}
+
+.row, .alt-row {
+	padding-top: $row-padding-top;
+	padding-bottom: $row-padding-bottom;
+	@include media-breakpoint-down(md) {
+		@media (orientation: landscape) {
+			padding-top: $row-padding-top*.8;
+			padding-bottom: $row-padding-bottom*.8;
+		}
+	}
+} */
+
+
+// 5. Clearfix ===============================
+
+.clearfix::before,
+.clearfix::after {
+	content: "";
+	display: block;
+}  
+.clearfix::after {
+	clear: both;
+}
+.clearfix {
+	clear: both;
+	*zoom: 1; 
+} 
+
+
+// 8. ОБЩИЕ СТИЛИ===============================

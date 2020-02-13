@@ -1,0 +1,46 @@
+@keyframes callByHover{
+	20% {
+		transform: rotate(-40deg);
+		text-shadow: 0 0 .5;
+	}
+	40% {
+		transform: rotate(40deg)
+	}
+	60% {
+		transform: rotate(-20deg);
+	}
+	80% {
+		transform: rotate(20deg)
+	}
+	to {
+		transform: rotate(0deg);
+	}
+}
+
+@keyframes call{
+	5% {
+		transform: rotate(-40deg);
+	}
+	10% {
+		transform: rotate(40deg)
+	}
+	15% {
+		transform: rotate(-20deg);
+	}
+	20% {
+		transform: rotate(20deg)
+	}
+	20% {
+		transform: rotate(0deg);
+	}
+}
+
+@keyframes phones-box-shadow{
+	from {
+		box-shadow: 0 0 .5em 0em #fff;
+	}
+	to {
+		box-shadow: 0 0 1.1em .1em #fff;
+	}
+}
+

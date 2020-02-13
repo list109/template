@@ -1,0 +1,57 @@
+
+// отцентрировать внутренний элемент
+%flex-сenter {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+// растянуть внутренний элемент
+%stretch {
+	width: 100%;
+	height: 100%;
+}
+
+// отступы основных разделов;
+%margin-box {
+	display: inline-block;
+	width: 100%;
+	margin: 5em auto;
+}
+
+// логотип
+%logo {
+	text-transform: uppercase;
+	font-weight: 700;
+}
+
+// отступ слева
+.item-indent {
+	margin-left: .5em;
+}
+
+// блочный псевдоэлемент
+%pseudo	{
+	display: block;
+	content: "";
+}
+
+%hightParagraph {
+	font-size: 1.1em;
+	line-height: 2;
+	color: scale-color(white, $lightness: 10%);
+}
+
+%miniTitle {
+	margin-bottom: 1.8em;	
+	font-weight: 400;
+}
+
+%centringMobileTitle {
+	text-align: center;
+}
+
+%nativ-link {
+	color: hsl(210, 75, 50);
+	text-decoration: underline;
+}

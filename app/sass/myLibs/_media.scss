@@ -1,0 +1,82 @@
+// xs width: < 576px; Экстрамалые девайсы;
+// sm min-width: >= 576px; Малые девайсы;
+// md min-width: >= 768px; Средние девайсы;
+// lg min-width: >= 992px; Большие девайсы;
+// xl min-width: >= 1200px; Экстрабольшие девайсы;
+@mixin media-breakpoint-up($min-width) {
+	@if $min-width == xs {
+		@content;
+	}
+	@else if $min-width == sm {
+		@media (min-width: 576px) {@content;}
+	}
+	@else if $min-width == md {
+		@media (min-width: 768px) {@content;}
+	}
+	@else if $min-width == lg {
+		@media (min-width: 992px) {@content;}	
+	}
+	@else if $min-width == xl {
+		@media (min-width: 1200px) {@content;}	
+	}
+	@else if $min-width == xxl {
+		@media (min-width: 1600px) {@content;}	
+	}
+}
+
+
+// xs max-width: < 575.98px; Экстрамалые девайсы;
+// sm max-width: < 767.98px; Малые девайсы;
+// md max-width: < 991.98px; Средние девайсы;
+// lg max-width: < 1199.98px; Большие девайсы;
+// xl max-width: > 1199.98px; Экстрабольшие девайсы;
+@mixin media-breakpoint-down($max-width) {
+	@if $max-width == xxs {
+		@media (max-width: 319.98px) {@content;} 
+	}
+	@else if $max-width == xs {
+		@media (max-width: 575.98px) {@content;}
+	}
+	@else if $max-width == sm {
+		@media (max-width: 767.98px) {@content;} // каждому значению max-width слудет быть равным предыдущему значению ширины (и минус размер padding-left/right если контейнер имеет значение свойства box-sizing не border-box или padding-box)
+	}
+	@else if $max-width == md {
+		@media (max-width: 991.98px) {@content;}
+	}
+	@else if $max-width == lg {
+		@media (max-width: 1199.98px) {@content;}	
+	}
+	@else if $max-width == xl {
+		@content;
+	}
+	@else {
+		@media(max-width: $max-width) {@content;}
+	}
+}
+
+
+// xs max-width: < 575.98px; Экстрамалые девайсы;
+// sm max-width: < 767.98px; Малые девайсы;
+// md max-width: < 991.98px; Средние девайсы;
+// lg max-width: < 1199.98px; Большие девайсы;
+// xl max-width: > 1199.98px; Экстрабольшие девайсы;
+@mixin media-breakpoint-only($width) {
+	@if $width == xxs {
+		@media (max-width: 319.98px) {@content;}
+	}
+	@else if $width == xs {
+		@media (min-width: 320px) and (max-width: 575.98px) {@content;}
+	}
+	@else if $width == sm {
+		@media (min-width: 576px) and (max-width: 767.98px) {@content;}
+	}
+	@else if $width == md {
+		@media (min-width: 768px) and (max-width: 991.98px) {@content;}
+	}
+	@else if $width == lg {
+		@media (min-width: 992px) and (max-width: 1199.98px) {@content;}	
+	}
+	@else  if $width == xl {
+		@media (width: 1200px) {@content;}	
+	}
+}
