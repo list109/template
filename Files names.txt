@@ -1,12 +1,10 @@
-js  (libs/libs.min.js, main.js, general.js)
+js (main.js, libs/libs.min.js, myLibs/)
 
 css (libs.min.css, main.min.css)
 
-img (/sprites/[originalFiles ,readyFiles])
+img (sprites/[originalFiles/ ,readyFiles/], favicons/)
 
-sprites (/originalFiles, /readyFiles)
-
-sass (	libs/libs.scss,
+sass (	libs/[libs.scss,
       	myLibs/_templates.scss,
 	myLibs/_tabs.scss_tabs.scss,
 	myLibs/_sprite-mixin.scss,
@@ -16,8 +14,9 @@ sass (	libs/libs.scss,
 	myLibs/_fonts.scss,
 	myLibs/_color-theme.scss,
 	myLibs/_buttons.scss,
-	myLibs/_animation.scss,
-	_general.scss)
+	myLibs/_animation.scss],
+	_general.scss,
+	main.scss)
 
 templates (scss-sprite-template.handlebars)
 
