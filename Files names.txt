@@ -1,10 +1,11 @@
-js (main.js, libs/libs.min.js, myLibs/)
+js  (libs/libs.min.js, main.js)
 
 css (libs.min.css, main.min.css)
 
-img (sprites/[originalFiles/ ,readyFiles/], favicons/)
+img (/sprites/[originalFiles ,readyFiles];
+     /favicons/;)
 
-sass (	libs/[libs.scss,
+sass (	libs/libs.scss,
       	myLibs/_templates.scss,
 	myLibs/_tabs.scss_tabs.scss,
 	myLibs/_sprite-mixin.scss,
@@ -14,7 +15,7 @@ sass (	libs/[libs.scss,
 	myLibs/_fonts.scss,
 	myLibs/_color-theme.scss,
 	myLibs/_buttons.scss,
-	myLibs/_animation.scss],
+	myLibs/_animation.scss,
 	_general.scss,
 	main.scss)
 
