@@ -152,6 +152,7 @@ gulp.task('svgsprite', function () {
             run: function ($) {
 				$('[fill]:not([fill="none"])').removeAttr('fill');
 				$('[style]').removeAttr('style');
+				$('symbol').attr('viewBox', '0 0 32 32');
             },
             parserOptions: { xmlMode: true }
         }))
@@ -161,7 +162,7 @@ gulp.task('svgsprite', function () {
 		}
 		// +инлайнового подключения - позволит избежать проблем с градиентами в различных браузерах
 		// -инлайнового подключения - отсутствие кеширования
-		// можно использовать оба метода: пользоваться 2 способом и при необходимости использовать инлайновый если есть градиенты?...
+		// можно использовать оба метода: способ внешнего подключения для кеширования и при необходимости использовать инлайновый если есть градиенты?...
 		// ...для использования способа с внешним файлом нужно подключить дополнительно svg4everybody для поддержки подключения внешних файлов в IE < 11
 		return gulp
         .src('app/index.html')
@@ -195,6 +196,7 @@ gulp.task('watch', (done) => {
 	gulp.watch('app/img/sprites/originalFiles/*.+(png||jpg||jpeg)', gulp.series('imgResize', 'sprite'));
 	//без преобразования к одинаковым размерам (как есть);
 	gulp.watch('app/img/sprites/readyFiles/*.+(png||jpg||jpeg)', gulp.series('sprite'));
+	gulp.watch('app/img/sprites/svg/**/*.svg', gulp.series('svgsprite'));
 	done();
 });
 

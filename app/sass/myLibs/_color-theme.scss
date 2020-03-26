@@ -2,28 +2,27 @@ $distance: 60;
 $invert-distance: $distance * -1;
 
 // the main colors
-$base-color: hsl(202, 90%, 71%); // базовый цвет
-$invert-base-color: complement($base-color); // сомплементарный цвет базовому
-$error-color: adjust-hue($base-color, $distance); //цвет ошибки
-$info-color: adjust-hue($base-color, $invert-distance); //цвет информации и элементов
-$succes-color: complement($error-color); // цвет успеха
-$warn-color: complement($info-color); // цвет предупреждения, внимания
+$base-color: hsl(87, 100%, 91%);
+$info-color: adjust-color($base-color, $hue: 82, $saturation: -44%, $lightness: -18%);
+$warn-color: adjust-color($base-color, $hue: -87, $saturation: -17%, $lightness: -18%);
+$succes-color: adjust-color($base-color, $hue: -40, $saturation: -5%, $lightness: -15%);
 
 // font-color
-$font-color: scale-color($invert-base-color, $saturation: 0%, $lightness: 100%);
-$alt-font-color: scale-color($font-color, $saturation: 0%, $lightness: -50%);
+$font-color: #999999;
+$alt-font-color: #000000;
 
 // font-shadow-color
 
 // link-color
 
-// buttons color for a carousel
+// buttons-color
+
+//icon-color (for svg)
+$icon-color: #95e1d3;
 
 // round-border
 
 // row-color
-$row-color: change-color($base-color, $saturation: 0, $lightness: 100%);
-$alt-row-color: scale-color($base-color, $saturation: -100%, $lightness: -55%);
 
 
 /* 
