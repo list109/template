@@ -41,8 +41,34 @@
 	transform: translate($tX, $tY) rotate($r);
 } 
 
+// выравнивание абсолютно спозиционированного элемента
 @mixin absolute-centering($left: 50%, $top: 50%) {
 	left: $left;
 	top: $top;
 	@include transform(-$left, -$top);
+}
+
+@mixin image-fon($url, $left: 50%, $top: 50%, $size: cover) {
+	background: url($url) no-repeat $left $top / $size;
+};
+
+
+
+
+
+@mixin retina-min($ratio: 1.5) {
+	@media (-webkit-min-device-pixel-ratio: $ratio), (min-resolution: #{$ratio}dppx) {
+		@content;
+	}
+}
+@mixin retina-max($ratio: 1.5) {
+	@media (-webkit-min-device-pixel-ratio: $ratio), (min-resolution: #{$ratio}dppx) {
+		@content;
+	}
+}
+@mixin retina-between($ratio-min: 1, $ratio-max: 2) {
+	@media(-webkit-min-device-pixel-ratio: $ratio-min) and (-webkit-max-device-pixel-ratio: $ratio-max), 
+	      (min-resolution: #{$ratio-min}dppx) and (max-resolution: #{$ratio-max}dppx) {
+				@content;
+		  }
 }

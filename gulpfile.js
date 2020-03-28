@@ -2,7 +2,7 @@ let gulp = require('gulp'),
 	path = require('path'),
 	sass = require('gulp-sass'),
 	browserSync = require('browser-sync'),
-	uglify = require('gulp-uglify'),
+	uglify = require('gulp-uglify-es').default, //es6 supported
 	concat = require('gulp-concat'),
 	rename = require('gulp-rename'),
 	sourcemaps = require('gulp-sourcemaps'),
@@ -77,22 +77,6 @@ gulp.task('scripts', () => {
 
 //=======================Спрайты===================================================
 
-// Подгонка размеров картинок под спрайты
-gulp.task('imgResize', function () {
-	return gulp.src('app/img/sprites/originalFiles/*.+(png||jpeg||jpg)')
-		// берем только те файлы, которые отличаються от файлов на выходе
-		.pipe(changed('app/img/sprites/readyFiles/', {
-			extension: '.png' // учесть изменение расширения
-		}))
-		.pipe(parallel(
-			imageResize({
-				width: 50,
-				height: 50,
-				format: 'png', // изменить расширение
-			})))
-		.pipe(gulp.dest('app/img/sprites/readyFiles/'));
-});
-
 //Создание спрайтов и их стилей
 /*Алгоритм: 
 1). spritesmith принимает измененные параментры; 
@@ -113,11 +97,26 @@ gulp.task('sprite', function (done) {
 			},
 		}));
 
-	spriteData.img.pipe(gulp.dest('app/img/sprites/'));
-	spriteData.css.pipe(gulp.dest('app/sass/myLibs/'));
+	spriteData.img.pipe(gulp.dest('app/img/'));
 
 	done();
 });
+
+// Подгонка размеров картинок под спрайты
+gulp.task('imgResize', gulp.series(function () {
+	return gulp.src('app/img/sprites/originalFiles/*.+(png||jpeg||jpg)')
+		// берем только те файлы, которые отличаються от файлов на выходе
+		.pipe(changed('app/img/sprites/readyFiles/', {
+			extension: '.png' // учесть изменение расширения
+		}))
+		.pipe(parallel(
+			imageResize({
+				width: 50,
+				height: 50,
+				format: 'png', // изменить расширение
+			})))
+		.pipe(gulp.dest('app/img/sprites/readyFiles/'));
+}, 'sprite'));
 
 //=======================SVG Спрайты===================================================
 
@@ -147,12 +146,12 @@ gulp.task('svgsprite', function () {
 		// генерация svg спрайта +
 		// отключение некоторых элементов(<?xml ?> и DOCTYPE) которые не нужны при инлайновом использовании
 		.pipe(svgstore({ inlineSvg: true }))
-		// удаление атрибутов fill и style у svg 
+		// удаление атрибутов fill и style у svg, добавление viewBox
 		.pipe(cheerio({
             run: function ($) {
 				$('[fill]:not([fill="none"])').removeAttr('fill');
 				$('[style]').removeAttr('style');
-				$('symbol').attr('viewBox', '0 0 32 32');
+				//$('symbol').attr('viewBox', '0 0 16 16'); // для растягивания содержимого svg в viewport с сохранение пропорций
             },
             parserOptions: { xmlMode: true }
         }))
@@ -191,9 +190,10 @@ gulp.task('watch', (done) => {
 	gulp.watch(['app/sass/*.+(sass|scss)', 'app/sass/myLibs/*.+(sass|scss)'], gulp.series('sass')); //все sass и scss кроме внешних либов;
 	gulp.watch('app/sass/libs/*.+(sass||scss||css)', gulp.series('sass-libs')); // только внешние либы;
 	gulp.watch('app/js/**/*.js', (done) => { browserSync.reload(), done() });
+	gulp.watch('app/js/libs/*.js', gulp.series('scripts'));
 	gulp.watch(['app/html/**/*.html', 'app/index.html'], (done) => { browserSync.reload(), done() });
 	//c преобразовынием к одинаковым размерам (выставлено 50*50);
-	gulp.watch('app/img/sprites/originalFiles/*.+(png||jpg||jpeg)', gulp.series('imgResize', 'sprite'));
+	gulp.watch('app/img/sprites/originalFiles/*.+(png||jpg||jpeg)', gulp.series('imgResize'));
 	//без преобразования к одинаковым размерам (как есть);
 	gulp.watch('app/img/sprites/readyFiles/*.+(png||jpg||jpeg)', gulp.series('sprite'));
 	gulp.watch('app/img/sprites/svg/**/*.svg', gulp.series('svgsprite'));
@@ -227,15 +227,21 @@ gulp.task('clean', (done) => {
 });
 
 
+gulp.task('replace', done => {
+	gulp.src(['app/img/**/*.*', '!app/img/sprites/**/*.*'])
+	.pipe(gulp.dest('prod/img/'));
+	done();
+});
+
 
 // 1). основной способ сжатия картинок;
 gulp.task('compress', (done) => {
 
-	gulp.src(['app/img/**/*.png', 'app/img/**/*.jpg'])
+	gulp.src(['app/img/**/*.png', 'app/img/**/*.jpg', '!app/img/sprites/**/*.*'])
 		.pipe(cache(tinyPng('ejsl52J9UzLtVC4shtRvKIwajsaTxp0J'),
 			{ name: 'images-tinyPng(png/jpg)' }))
 		.pipe(gulp.dest('prod/img/'));
-	gulp.src(['app/img/**/*.svg', 'app/img/**/*.gif'])
+	gulp.src(['app/img/**/*.gif', 'app/img/**/*.webp', '!app/img/sprites/**/*.*'])
 		.pipe(cache(imagemin([
 			imagemin.gifsicle({ interlaced: true }),
 			imagemin.jpegtran({ progressive: true }),
@@ -297,14 +303,14 @@ gulp.task('build',
 		'compress',
 		'css',
 		(done) => {
-			gulp.src('app/fonts/**/*.*')//fonts;
+			gulp.src('app/fonts/**/*.*')	//fonts;
 				.pipe(gulp.dest('prod/fonts'));
-			gulp.src('app/js/**/*')//js;
+			gulp.src('app/js/**/*')			//js;
 				.pipe(gulp.dest('prod/js'));
-			gulp.src('app/*.html')//index html;
-				.pipe(gulp.dest('prod/'));
-			gulp.src('app/html/**/*.html')//the rest of html;
+			gulp.src('app/html/**/*.html')	//the rest of html;
 				.pipe(gulp.dest('prod/html'));
+			gulp.src('app/*.*')				//the rest of files;	
+				.pipe(gulp.dest('prod/'));
 			done();
 		}
 	)

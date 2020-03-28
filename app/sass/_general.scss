@@ -70,8 +70,19 @@ body {
 
 //1.2 Ссылки ====================
 .link {
+	display: block;
+	box-sizing: border-box;
 	text-decoration: none;
 	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+	transition: 0.2s ease-in;
+	color: inherit;
+	cursor: pointer;
+	&::before {
+		transition: 0.2s ease-in;
+	}
+	&_light {
+		color: $font-light-color;
+	}
 }
 
 /* a[href^="tel:"] {
@@ -205,26 +216,19 @@ small {
 }
 
 // 4. ПОЛОСЫ ===============================
-/* $margin-box: 5em;
-
 .row {
-	background-color: $row-color;
-}
-
-.alt-row {
-	background-color: $alt-row-color;
-}
-
-.row, .alt-row {
-	padding-top: $row-padding-top;
-	padding-bottom: $row-padding-bottom;
-	@include media-breakpoint-down(md) {
-		@media (orientation: landscape) {
-			padding-top: $row-padding-top*.8;
-			padding-bottom: $row-padding-bottom*.8;
-		}
+	padding-top: 85px;
+	padding-bottom: 110px;
+	@media(max-width: 991px) {
+		padding-top: 80px;
+		padding-bottom: 90px;
 	}
-} */
+	@media(max-width: 576px) {
+		padding-top: 60px;
+		padding-bottom: 75px;
+	}
+
+}
 
 
 // 5. Clearfix ===============================
