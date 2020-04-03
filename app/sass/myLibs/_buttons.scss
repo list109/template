@@ -1,7 +1,20 @@
 
 
 // КНОПКИ
-
+.btn {
+    box-sizing: border-box;
+  
+    border: none;
+    padding: 0;
+    outline: none;
+  
+    color: $font-light-color;  
+    text-transform: uppercase;  
+    background-color: transparent;
+  
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    cursor: pointer;
+  }
 // 1. ЦВЕТА КНОПОК
 
 // 1.1 Цвета основных кнопок
