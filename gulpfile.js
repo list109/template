@@ -10,6 +10,7 @@ let gulp = require('gulp'),
 	newer = require('gulp-newer'),
 	cache = require('gulp-cache'),
 	autoprefixer = require('gulp-autoprefixer'),
+	webp = require('gulp-webp'),
 	tinyPng = require('gulp-tinypng'),
 	imagemin = require('gulp-imagemin'),
 	imageminPngquant = require('imagemin-pngquant'),
@@ -74,6 +75,13 @@ gulp.task('scripts', () => {
 		.pipe(gulp.dest('app/js'));
 });
 
+//Создание копий изображений в формате webp
+gulp.task('webp', done => {
+	gulp.src(['app/img/**/*.+(jpeg|png|jpg|webp)', '!app/img/sprites/**/*.*'])
+		.pipe(webp({quality: 90}))
+		.pipe(gulp.dest('app/img'));
+	done();	
+}) 	
 
 //=======================Спрайты===================================================
 
