@@ -86,6 +86,7 @@ class Slider {
     startWithPressedMouse(event) {
         this.isPressed = true;
         this.startDistance = event.clientX;
+        this.stopTimer();
 
         this.initialSlide = event.target.closest('[data-slider-item]'); //decision of currently for a single visible slide of the slider
 
