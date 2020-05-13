@@ -94,6 +94,7 @@ class Slider {
         this.sliderLine.style.transition = 'initial';
 
         window.addEventListener('mousemove', this.moveWithPressedMouse);
+        event.preventDefault();
     }
     endWithPressedMouse(clientX) {
         if(!this.isPressed) return;
