@@ -53,7 +53,7 @@ gulp.task('sass', function () {
 		.pipe(browserSync.stream());
 });
 
-// Преобразование либов в css и инжектинг при изменениях;
+// Преобразование сторонних либов в css и инжектинг при изменениях (подразумевается что файлы уже минифицированы);
 gulp.task('sass-libs', () => {
 	return gulp.src('app/sass/libs/libs.+(scss||sass||css)')
 		.pipe(sass().on('error', sass.logError))
@@ -144,6 +144,7 @@ gulp.task('svgsprite', function () {
             var prefix = path.basename(file.relative, path.extname(file.relative));
             return {
                 plugins: [{
+					removeViewBox: false,
                     cleanupIDs: {
                         prefix: prefix + '-',
                         minify: true
@@ -176,8 +177,6 @@ gulp.task('svgsprite', function () {
         .pipe(inject(svgs, { transform: fileContents }))
         .pipe(gulp.dest('app/'));
 });
-
-
 
 //=================================================================================
 
@@ -313,7 +312,7 @@ gulp.task('build',
 		(done) => {
 			gulp.src('app/fonts/**/*.*')	//fonts;
 				.pipe(gulp.dest('prod/fonts'));
-			gulp.src('app/js/**/*')			//js;
+			gulp.src(['app/js/main.js', 'app/js/libs.min.js'])			//js;
 				.pipe(gulp.dest('prod/js'));
 			gulp.src('app/html/**/*.html')	//the rest of html;
 				.pipe(gulp.dest('prod/html'));
