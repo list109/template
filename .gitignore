@@ -6,3 +6,4 @@
 /dist/
 /prod/
 *min.js
+/.gulp/
