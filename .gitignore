@@ -1,7 +1,3 @@
-.*
-!.gitattributes
-!.gitignore
-
 /node_modules/
 /dist/
 /prod/
