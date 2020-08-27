@@ -1,39 +1,40 @@
-let gulp = require('gulp'),
-	path = require('path'),
-	sass = require('gulp-sass'),
-	browserSync = require('browser-sync'),
-	uglify = require('gulp-uglify-es').default, //es6 supported
-	concat = require('gulp-concat'),
-	rename = require('gulp-rename'),
-	sourcemaps = require('gulp-sourcemaps'),
-	cssnano = require('gulp-cssnano'),
-	newer = require('gulp-newer'),
-	cache = require('gulp-cache'),
-	autoprefixer = require('gulp-autoprefixer'),
-	webp = require('gulp-webp'),
-	tinyPng = require('gulp-tinypng'),
-	imagemin = require('gulp-imagemin'),
-	imageminPngquant = require('imagemin-pngquant'),
-	imageminJpegRecompress = require('imagemin-jpeg-recompress'),
-	del = require('del');//удаление файлов или директорий,
-	spritesmith = require('gulp.spritesmith'), // спрайт
+const gulp = require('gulp');
+const path = require('path');
+const sass = require('gulp-sass');
+const browserSync = require('browser-sync');
+const concat = require('gulp-concat');
+const rename = require('gulp-rename');
+const sourcemaps = require('gulp-sourcemaps');
+const cache = require('gulp-cache');
+const postcss = require('gulp-postcss');
+const autoprefixer = require('gulp-autoprefixer');
+const cssnano = require('gulp-cssnano');
+const webp = require('gulp-webp');
+const tinyPng = require('gulp-tinypng');
+const imagemin = require('gulp-imagemin');
+const imageminPngquant = require('imagemin-pngquant');
+const imageminJpegRecompress = require('imagemin-jpeg-recompress');
+const del = require('del');//удаление файлов или директорий,
+const spritesmith = require('gulp.spritesmith'); // спрайт
+const babel = require('gulp-babel');
+const minify = require('gulp-babel-minify');
 
-	svgmin = require('gulp-svgmin'), // минификация и изменение имени svg перед сборкой в спрайт
-	cheerio = require('gulp-cheerio'), // изменение html и xml (используеться для удаления атрибутов style, fill, stroke у svg в данной сборке)
-	svgstore = require('gulp-svgstore'), // svg спрайт
-	inject = require('gulp-inject'), // подключение потоков файлов в различные форматы файлов 
+const svgmin = require('gulp-svgmin'); // минификация и изменение имени svg перед сборкой в спрайт
+const cheerio = require('gulp-cheerio'); // изменение html и xml (используеться для удаления атрибутов style, fill, stroke у svg в данной сборке)
+const svgstore = require('gulp-svgstore'); // svg спрайт
+const inject = require('gulp-inject'); // подключение потоков файлов в различные форматы файлов 
 
 
 
 
-	// сравнение исходных фалов и файлов сборки
-	changed = require('gulp-changed'),
-	// проверка исходных файлов на месте
-	changedInPlace = require('gulp-changed-in-place'),
-	// изменение размеров картинки
-	imageResize = require('gulp-image-resize'),
-	// параллельное преобразование
-	parallel = require('concurrent-transform');
+// сравнение исходных фалов и файлов сборки
+const changed = require('gulp-changed');
+// проверка исходных файлов на месте
+const changedInPlace = require('gulp-changed-in-place');
+// изменение размеров картинки
+const imageResize = require('gulp-image-resize');
+// параллельное преобразование
+const parallel = require('concurrent-transform');
 
 
 
@@ -66,22 +67,20 @@ gulp.task('sass-libs', () => {
 
 
 //Конкатенация и минификация всех js библиотек;
-gulp.task('scripts', () => {
+gulp.task('js-libs', () => {
 	return gulp.src(['app/js/libs/*.js'])
-		.pipe(sourcemaps.init())
 		.pipe(concat('libs.min.js'))
-		.pipe(uglify())
-		.pipe(sourcemaps.write())
 		.pipe(gulp.dest('app/js'));
 });
+
 
 //Создание копий изображений в формате webp
 gulp.task('webp', done => {
 	gulp.src(['app/img/**/*.+(jpeg|png|jpg|webp)', '!app/img/sprites/**/*.*'])
-		.pipe(webp({quality: 90}))
+		.pipe(webp({ quality: 90 }))
 		.pipe(gulp.dest('app/img'));
-	done();	
-}) 	
+	done();
+})
 
 //=======================Спрайты===================================================
 
@@ -132,50 +131,50 @@ gulp.task('svgsprite', function () {
 	var svgs = gulp.src('app/img/sprites/svg/**/*.svg')
 		// если есть файлы во вложенных каталогах, то добавляем названия каталогов в имя файла в начало через разделитель "-", 
 		// чтобы не было конфликтов svg файлов с одинаковым названием при преобразовании в id в спрайте
-		.pipe(rename(function (file) { 
-            var name = file.dirname.split(path.sep);
+		.pipe(rename(function (file) {
+			var name = file.dirname.split(path.sep);
 			name.push(file.basename);
-			if(name[0] != '.') {
+			if (name[0] != '.') {
 				file.basename = name.join('-');
 			}
-            
-        }))
-		.pipe(svgmin(function getOptions (file) {
-            var prefix = path.basename(file.relative, path.extname(file.relative));
-            return {
-                plugins: [{
+
+		}))
+		.pipe(svgmin(function getOptions(file) {
+			var prefix = path.basename(file.relative, path.extname(file.relative));
+			return {
+				plugins: [{
 					removeViewBox: false,
-                    cleanupIDs: {
-                        prefix: prefix + '-',
-                        minify: true
-                    }
-                }]
-            }
+					cleanupIDs: {
+						prefix: prefix + '-',
+						minify: true
+					}
+				}]
+			}
 		}))
 		// генерация svg спрайта +
 		// отключение некоторых элементов(<?xml ?> и DOCTYPE) которые не нужны при инлайновом использовании
 		.pipe(svgstore({ inlineSvg: true }))
 		// удаление атрибутов fill и style у svg, добавление viewBox
 		.pipe(cheerio({
-            run: function ($) {
+			run: function ($) {
 				$('[fill]:not([fill="none"])').removeAttr('fill');
 				$('[style]').removeAttr('style');
 				//$('symbol').attr('viewBox', '0 0 16 16'); // для растягивания содержимого svg в viewport с сохранение пропорций
-            },
-            parserOptions: { xmlMode: true }
-        }))
+			},
+			parserOptions: { xmlMode: true }
+		}))
 
-		function fileContents (filePath, file) {
-			return file.contents.toString();
-		}
-		// +инлайнового подключения - позволит избежать проблем с градиентами в различных браузерах
-		// -инлайнового подключения - отсутствие кеширования
-		// можно использовать оба метода: способ внешнего подключения для кеширования и при необходимости использовать инлайновый если есть градиенты?...
-		// ...для использования способа с внешним файлом нужно подключить дополнительно svg4everybody для поддержки подключения внешних файлов в IE < 11
-		return gulp
-        .src('app/index.html')
-        .pipe(inject(svgs, { transform: fileContents }))
-        .pipe(gulp.dest('app/'));
+	function fileContents(filePath, file) {
+		return file.contents.toString();
+	}
+	// +инлайнового подключения - позволит избежать проблем с градиентами в различных браузерах
+	// -инлайнового подключения - отсутствие кеширования
+	// можно использовать оба метода: способ внешнего подключения для кеширования и при необходимости использовать инлайновый если есть градиенты?...
+	// ...для использования способа с внешним файлом нужно подключить дополнительно svg4everybody для поддержки подключения внешних файлов в IE < 11
+	return gulp
+		.src('app/index.html')
+		.pipe(inject(svgs, { transform: fileContents }))
+		.pipe(gulp.dest('app/'));
 });
 
 //=================================================================================
@@ -191,14 +190,17 @@ gulp.task('browser-sync', done => {
 	done();
 });
 
+function browsersync(done) {
+	browserSync.reload(); done();
+}
 
 // Наблюдение за изменениями в файлах для обновления;
 gulp.task('watch', (done) => {
 	gulp.watch(['app/sass/*.+(sass|scss)', 'app/sass/myLibs/*.+(sass|scss)'], gulp.series('sass')); //все sass и scss кроме внешних либов;
 	gulp.watch('app/sass/libs/*.+(sass||scss||css)', gulp.series('sass-libs')); // только внешние либы;
-	gulp.watch('app/js/**/*.js', (done) => { browserSync.reload(), done() });
-	gulp.watch('app/js/libs/*.js', gulp.series('scripts'));
-	gulp.watch(['app/html/**/*.html', 'app/index.html'], (done) => { browserSync.reload(), done() });
+	gulp.watch('app/js/**/*.js', browsersync);
+	gulp.watch('app/js/libs/*.js', gulp.series('js-libs'));
+	gulp.watch(['app/html/**/*.html', 'app/index.html'], browsersync);
 	//c преобразовынием к одинаковым размерам (выставлено 50*50);
 	gulp.watch('app/img/sprites/originalFiles/*.+(png||jpg||jpeg)', gulp.series('imgResize'));
 	//без преобразования к одинаковым размерам (как есть);
@@ -211,7 +213,7 @@ gulp.task('watch', (done) => {
 запуск таксов перед наблюдением, 
 запуск наблюдения*/
 gulp.task('default', gulp.parallel(
-	'browser-sync', 'sass', 'sass-libs', 'scripts', 'sprite', 'svgsprite', 'watch'
+	'browser-sync', 'sass', 'sass-libs', 'js-libs', 'sprite', 'svgsprite', 'watch'
 ), done => done());
 
 
@@ -236,7 +238,7 @@ gulp.task('clean', (done) => {
 
 gulp.task('replace', done => {
 	gulp.src(['app/img/**/*.*', '!app/img/sprites/**/*.*'])
-	.pipe(gulp.dest('prod/img/'));
+		.pipe(gulp.dest('prod/img/'));
 	done();
 });
 
@@ -286,13 +288,14 @@ gulp.task('altCompress', () => {
 
 // В css добавляються префиксы, минификация, карты исходного кода и перенос в prod;
 gulp.task('css', () => {
+	const plugins = [
+		autoprefixer({ cascade: false }),
+		cssnano(),
+	];
+
 	gulp.src('app/css/*.css')
 		.pipe(sourcemaps.init())
-		.pipe(autoprefixer({
-			overrideBrowserslist: ['last 2 versions'],
-			cascade: false
-		}))
-		.pipe(cssnano())
+		.pipe(postcss(plugins))
 		.pipe(sourcemaps.write())
 		.pipe(gulp.dest('prod/css/'));
 
@@ -300,20 +303,32 @@ gulp.task('css', () => {
 		.pipe(gulp.dest('prod/css/'));
 });
 
+gulp.task('scripts', () => {
+	return gulp.src(['app/js/main.js', 'app/js/libs.min.js']) //js
+		.pipe(sourcemaps.init())
+		.pipe(babel())
+		.pipe(minify({
+			mangle: {
+				keepClassName: true,
+			}
+		}))
+		.pipe(sourcemaps.write())
+		.pipe(gulp.dest('prod/js'));
+})
+
 // сам процесс сборки
 gulp.task('build',
 	gulp.series(
 		'clean',
 		'sass',
 		'sass-libs',
-		'scripts',
+		'js-libs',
 		'compress',
+		'scripts',
 		'css',
 		(done) => {
 			gulp.src('app/fonts/**/*.*')	//fonts;
 				.pipe(gulp.dest('prod/fonts'));
-			gulp.src(['app/js/main.js', 'app/js/libs.min.js'])			//js;
-				.pipe(gulp.dest('prod/js'));
 			gulp.src('app/html/**/*.html')	//the rest of html;
 				.pipe(gulp.dest('prod/html'));
 			gulp.src('app/*.*')				//the rest of files;	
